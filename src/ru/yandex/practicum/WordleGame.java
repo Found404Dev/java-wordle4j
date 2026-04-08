@@ -6,6 +6,9 @@ import ru.yandex.practicum.exceptions.WordNotFoundException;
 import java.util.*;
 
 public class WordleGame {
+    private static final int WORD_LENGTH = 5;
+    private static final int MAX_ATTEMPTS = 6;
+
     private final String answer;
     private int remainingAttempts;
     private final WordleDictionary dictionary;
@@ -21,7 +24,7 @@ public class WordleGame {
     public WordleGame(WordleDictionary dictionary, String answer) {
         this.dictionary = dictionary;
         this.answer = answer.toLowerCase().replace('ё', 'е');
-        this.remainingAttempts = 6;
+        this.remainingAttempts = MAX_ATTEMPTS;
         this.attempts = new ArrayList<>();
         this.givenHints = new ArrayList<>();
         this.won = false;
@@ -29,7 +32,7 @@ public class WordleGame {
         this.absentLetters = new HashSet<>();
         this.exactLetters = new HashMap<>();
         this.wrongPositionLetters = new HashMap<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < WORD_LENGTH; i++) {
             wrongPositionLetters.put(i, new HashSet<>());
         }
         this.presentLetters = new HashSet<>();
@@ -115,10 +118,10 @@ public class WordleGame {
     private String computeResult(String guess, String answer) {
         char[] guessChars = guess.toCharArray();
         char[] answerChars = answer.toCharArray();
-        char[] result = new char[5];
-        boolean[] usedInAnswer = new boolean[5];
+        char[] result = new char[WORD_LENGTH];
+        boolean[] usedInAnswer = new boolean[WORD_LENGTH];
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < WORD_LENGTH; i++) {
             if (guessChars[i] == answerChars[i]) {
                 result[i] = '+';
                 usedInAnswer[i] = true;
@@ -127,10 +130,10 @@ public class WordleGame {
             }
         }
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < WORD_LENGTH; i++) {
             if (result[i] == '+') continue;
             char ch = guessChars[i];
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < WORD_LENGTH; j++) {
                 if (!usedInAnswer[j] && ch == answerChars[j]) {
                     result[i] = '^';
                     usedInAnswer[j] = true;
@@ -145,7 +148,7 @@ public class WordleGame {
         char[] guessChars = guess.toCharArray();
         char[] resultChars = result.toCharArray();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < WORD_LENGTH; i++) {
             char ch = guessChars[i];
             char res = resultChars[i];
             if (res == '+') {
@@ -156,7 +159,7 @@ public class WordleGame {
                 presentLetters.add(ch);
             } else {
                 boolean appearsElsewhere = false;
-                for (int j = 0; j < 5; j++) {
+                for (int j = 0; j < WORD_LENGTH; j++) {
                     if (resultChars[j] != '-' && guessChars[j] == ch) {
                         appearsElsewhere = true;
                         break;
